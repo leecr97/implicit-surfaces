@@ -7,7 +7,7 @@ Email: leecr@seas.upenn.edu
 ![](introimage.png)
 
 ## Live Project Demo
-[Link]
+[Link](https://leecr97.github.io/implicit-surfaces/)
 
 ## Project Description
 This project is a procedurally generated and animated scene created using a custom shader. It uses raymarching and signed distance functions to create implicit surfaces. 
