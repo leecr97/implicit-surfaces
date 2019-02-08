@@ -1,7 +1,10 @@
 # Implicit Surfaces:
 Name: Crystal Lee
+
 PennKey: leecr
+
 Email: leecr@seas.upenn.edu
+
 [Website](www.crystaljlee.com)
 
 ![](introimage.png)
@@ -22,7 +25,7 @@ My scene is made of several implicit simple polygons that create more complex on
 
 The polygons in the scene are illuminated using the Phong reflection model from a single light. This model uses the surface normal to calculate the amount of light the shape should receive at that point from a given light and its intensity. The illumination is calculated using other given parameters that determine the ambient color, diffuse color, specular color, and shininess coefficient.
 
-In addition to the actual objects in the scene, the background of the scene is also texturing using procedural noise functions. A height value is calculated at every point using two recursions of Perlin noise and exponential functions, and that height then determines the color of the background at that point.
+In addition to the actual objects in the scene, the background of the scene is also textured using procedural noise functions. A height value is calculated at every point using two recursions of Perlin noise and exponential functions, and that height then determines the color of the background at that point.
 
 Finally, some raymarching optimization along the lines of a Bounding Volume Hierarchy was used to help render the scene faster. When we raymarch, the first object we test the ray against is the bounding volume of the polygons in the scene. If it does not hit this bounding volume, then we know that the ray does not hit any of the polygons and we go straight to rendering the background. If it does hit the bounding volume, then we ray march from the bounds of this bounding volume to find the polygons in the scene. This helps speed up the rendering process both because we avoid unnecessary raymarching steps if a ray will not hit our scene, and we reduce the number of raymarching steps necessary for any ray that does hit our scene.
 
