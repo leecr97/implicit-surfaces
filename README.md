@@ -1,89 +1,40 @@
-# CIS 566 Homework 2: Implicit Surfaces
+# Implicit Surfaces:
+Name: Crystal Lee
+PennKey: leecr
+Email: leecr@seas.upenn.edu
+[Website](www.crystaljlee.com)
 
-## Objective
-- Gain experience with signed distance functions
-- Experiment with animation curves
+![](introimage.png)
 
-## Base Code
-The code we have provided for this assignment features the following:
-- A square that spans the range [-1, 1] in X and Y that is rendered with a
-shader that does not apply a projection matrix to it, thus rendering it as the
-entirety of your screen
-- TypeScript code just like the code in homework 1 to set up a WebGL framework
-- Code that passes certain camera attributes (listed in the next section),
-the screen dimensions, and a time counter to the shader program.
+## Live Project Demo
+[Link]
 
-## Assignment Requirements
-- __(10 points)__ Modify the provided `flat-frag.glsl` to cast rays from a
-virtual camera. We have set up uniform variables in your shader that take in
-the eye position, reference point position, and up vector of the `Camera` in
-the provided TypeScript code, along with a uniform that stores the screen width
-and height. Using these uniform variables, and only these uniform variables,
-you must write a function that uses the NDC coordinates of the current fragment
-(i.e. its fs_Pos value) and projects a ray from that pixel. Refer to the [slides
-on ray casting](https://docs.google.com/presentation/d/e/2PACX-1vSN5ntJISgdOXOSNyoHimSVKblnPnL-Nywd6aRPI-XPucX9CeqzIEGTjFTwvmjYUgCglTqgvyP1CpxZ/pub?start=false&loop=false&delayms=60000&slide=id.g27215b64c6_0_107)
-from CIS 560 for reference on how to cast a ray without an explicit
-view-projection matrix. You'll have to compute your camera's Right vector based
-on the provided Up vector, Eye point, and Ref point. You can test your ray
-casting function by converting your ray directions to colors using the formula
-`color = 0.5 * (dir + vec3(1.0, 1.0, 1.0))`. If your screen looks like the
-following image, your rays are being cast correctly:
-![](rayDir.png)
-- __(70 points)__ Create and animate a scene using signed distance functions.
-The subject of your scene can be anything you like, provided your scene includes
-the following elements:
-  - The SDF combination operations Intersection, Subtraction, and Smooth Blend
-  - Raymarch optimization by way of bounding volumes around SDFs, arranged in
-  a Bounding Volume Hierarchy
-  - Animation of at least two scene attributes such as color, position, scale,
-  twist, rotation, texture, or anything else you can think of
-  - At least two functions mentioned in the Toolbox Functions slides used for
-  animation
-  - Procedural texturing using toolbox functions and/or noise functions
-  - Shading that involves surface normal computation
+## Project Description
+This project is a procedurally generated and animated scene created using a custom shader. It uses raymarching and signed distance functions to create implicit surfaces. 
 
-- __(10 points)__ Add GUI elements via dat.GUI that allow the user to modify at
-least two different attributes of your scene.
+Some background information: Raycasting is the process of casting "rays" from a virtual camera by creating a line that passes through the viewing frustum and travels from the eye to some endpoint on a slice of the frustum (e.g. the far clip plane). The line's endpoint is determined by the pixel on our screen from which we want to raycast.
 
-- __(10 points)__ Following the specifications listed
-[here](https://github.com/pjcozzi/Articles/blob/master/CIS565/GitHubRepo/README.md),
-create your own README.md, renaming this file to INSTRUCTIONS.md. Don't worry
-about discussing runtime optimization for this project. Make sure your
-README contains the following information:
-  - Your name and PennKey
-  - Citation of any external resources you found helpful when implementing this
-  assignment.
-  - A link to your live github.io demo (refer to the pinned Piazza post on
-    how to make a live demo through github.io)
-  - An explanation of the techniques you used to generate your planet features.
-  Please be as detailed as you can; not only will this help you explain your work
-  to recruiters, but it helps us understand your project when we grade it!
+Signed-distance functions are functions that, given a point p and our desires surface, returns a value that indicates how close p is to the surface. If p is on the surface, the SDF returns a value close to 0. If p is outside the surface, the SDF returns a positive float and if p is inside, the SDF returns a negative float.
 
-## Useful Links
-- [IQ's Article on SDFs](http://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm)
-- [IQ's Article on Smooth Blending](http://www.iquilezles.org/www/articles/smin/smin.htm)
-- [IQ's Article on Useful Functions](http://www.iquilezles.org/www/articles/functions/functions.htm)
-- [Breakdown of Rendering an SDF Scene](http://www.iquilezles.org/www/material/nvscene2008/rwwtt.pdf)
+SDFs can be combined with rays to create surfaces. To draw using SDFs, we simply march along a ray by generating points p until we find a point p that is on the surface of the SDF function. Once we know the location of the surface, we can render it by changing its color, estimating its normal, and using its normal to illuminate it. 
 
+My scene is made of several implicit simple polygons that create more complex ones through boolean operations. For instance, we have a polygon in the center that is a continuous smooth blend of a sphere and a cube. This shape is then diffed with a separate shape that is a union of three cylinders, one on each axis. Additional visual complexity is created by three spheres that use a triangle wave function to slowly pass through the center shape, and a revolving shape that surrounds the scene that is created by intersecting a torus with two rectangular prisms that traverse the x and y axes using a sawtooth wave.
 
-## Submission
-Commit and push to Github, then submit a link to your commit on Canvas. Remember
-to make your own README!
+The polygons in the scene are illuminated using the Phong reflection model from a single light. This model uses the surface normal to calculate the amount of light the shape should receive at that point from a given light and its intensity. The illumination is calculated using other given parameters that determine the ambient color, diffuse color, specular color, and shininess coefficient.
 
-## Inspiration
-- [Alien Corridor](https://www.shadertoy.com/view/4slyRs)
-- [The Evolution of Motion](https://www.shadertoy.com/view/XlfGzH)
-- [Fractal Land](https://www.shadertoy.com/view/XsBXWt)
-- [Voxel Edges](https://www.shadertoy.com/view/4dfGzs)
-- [Snail](https://www.shadertoy.com/view/ld3Gz2)
-- [Cubescape](https://www.shadertoy.com/view/Msl3Rr)
-- [Journey Tribute](https://www.shadertoy.com/view/ldlcRf)
-- [Stormy Landscape](https://www.shadertoy.com/view/4ts3z2)
-- [Generators](https://www.shadertoy.com/view/Xtf3Rn)
+In addition to the actual objects in the scene, the background of the scene is also texturing using procedural noise functions. A height value is calculated at every point using two recursions of Perlin noise and exponential functions, and that height then determines the color of the background at that point.
 
-## Extra Credit (20 points maximum)
-- __(5 - 20 pts)__ Do some research into more advanced shading techniques such
-as ambient occlusion, soft shadows, GGX materials, depth of field, volumetrics,
-etc. and implement one of them. The more complex your feature, the more points
-you'll earn.
-- __(? pts)__ Propose an extra feature of your own!
+Finally, some raymarching optimization along the lines of a Bounding Volume Hierarchy was used to help render the scene faster. When we raymarch, the first object we test the ray against is the bounding volume of the polygons in the scene. If it does not hit this bounding volume, then we know that the ray does not hit any of the polygons and we go straight to rendering the background. If it does hit the bounding volume, then we ray march from the bounds of this bounding volume to find the polygons in the scene. This helps speed up the rendering process both because we avoid unnecessary raymarching steps if a ray will not hit our scene, and we reduce the number of raymarching steps necessary for any ray that does hit our scene.
+
+There is also a provided GUI that allows the user to modify certain aspects of the scene. The "background" field simply allows the user to change the background color into one of three preset options - blue, red, or gray. In addition, the user can also change the "shininess" coefficient of the Phong lighting model, which can lead to the materials looking much more metallic or plastic.
+
+Click on the live demo to see it in action!
+
+## References
+[Volumetric Rendering: Signed Distance Functions](https://www.alanzucconi.com/2016/07/01/signed-distance-functions/#part1) by Alan Zucconi
+
+[Ray Marching and Signed Distance Functions](http://jamie-wong.com/2016/07/15/ray-marching-signed-distance-functions/) by Jamie Wong
+
+[Distance Functions](http://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm) by Inigo Quilez
+
+[Phong reflection model](https://en.wikipedia.org/wiki/Phong_reflection_model)

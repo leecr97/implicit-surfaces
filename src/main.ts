@@ -12,10 +12,14 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 const controls = {
   tesselations: 5,
   'Load Scene': loadScene, // A function pointer, essentially
+  Background: 0,
+  Shininess: 10,
 };
 
 let square: Square;
 let time: number = 0;
+let bg: number = 0;
+let illum: number = 10;
 
 function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
@@ -47,6 +51,8 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
+  gui.add(controls, 'Background', { Blue: 0, Red: 1, Gray: 2 } );
+  gui.add(controls, 'Shininess', -10, 10);
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -81,11 +87,13 @@ function main() {
     camera.update();
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
+    bg = controls.Background;
+    illum = controls.Shininess;
     renderer.clear();
     processKeyPresses();
     renderer.render(camera, flat, [
       square,
-    ], time);
+    ], time, bg, illum);
     time++;
     stats.end();
 

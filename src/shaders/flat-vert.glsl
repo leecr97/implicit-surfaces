@@ -1,5 +1,7 @@
 #version 300 es
 precision highp float;
+uniform float u_BG;
+uniform float u_Illum;
 
 // The vertex shader used to render the background of the scene
 

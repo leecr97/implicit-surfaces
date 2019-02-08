@@ -29,6 +29,8 @@ class ShaderProgram {
   unifUp: WebGLUniformLocation;
   unifDimensions: WebGLUniformLocation;
   unifTime: WebGLUniformLocation;
+  unifBG: WebGLUniformLocation;
+  unifIllum: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -47,6 +49,8 @@ class ShaderProgram {
     this.unifUp   = gl.getUniformLocation(this.prog, "u_Up");
     this.unifDimensions   = gl.getUniformLocation(this.prog, "u_Dimensions");
     this.unifTime   = gl.getUniformLocation(this.prog, "u_Time");
+    this.unifBG = gl.getUniformLocation(this.prog, "u_BG");
+    this.unifIllum = gl.getUniformLocation(this.prog, "u_Illum");
   }
 
   use() {
@@ -80,6 +84,20 @@ class ShaderProgram {
     this.use();
     if(this.unifTime !== -1) {
       gl.uniform1f(this.unifTime, t);
+    }
+  }
+
+  setBG(b : number) {
+    this.use();
+    if(this.unifBG !== -1) {
+      gl.uniform1f(this.unifBG, b);
+    }
+  }
+
+  setIllum(i : number) {
+    this.use();
+    if(this.unifBG !== -1) {
+      gl.uniform1f(this.unifIllum, i);
     }
   }
 
